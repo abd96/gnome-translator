@@ -1,12 +1,12 @@
 {
     
-	"description" : "my extension description2",
-	"name" : "myextension",
+	"description" : "A translator for gnome shell",
+	"name" : "gnome-translator",
 	"shell-version" : [
 		"3.34.1"
 	],
 	"url" : "",
-	"uuid" : "myextension@example.com",
+	"uuid" : "gnome-translator@example.com",
 	"version" : 1
 }
 

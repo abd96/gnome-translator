@@ -5,7 +5,8 @@ const Gio = imports.gi.Gio;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-
+const GLib = imports.gi.GLib; 
+const Soup = imports.gi.Soup
 
 let myPopup; 
 
@@ -22,11 +23,6 @@ class MyPopup extends PanelMenu.Button {
         this.add_child(icon);
         this.create_menu(); 
         this.open_close();
-        this.test_translation("this is text"); 
-    }
-    
-    test_translation(text){
-        print(text)
     }
 
     open_close(){
@@ -34,8 +30,47 @@ class MyPopup extends PanelMenu.Button {
             if (open){
                 // Set default language
                 print('opened');
+                this.test_translation()
             }
         });
+    }
+
+    test_translation(){
+        
+        
+        print("BEOFRE -.................");
+        let url = "https://libretranslate.com/translate";
+        let request = Soup.Message.new('POST',url);
+        let messageBody = Soup.MessageBody.new();
+        let body    = messageBody.append(
+            JSON.stringify({
+                q: "Hello",
+                source: "en",
+                target: "es"
+            })
+        );
+        let messageHeader = Soup.MessageHeaders.new(
+            Soup.MessageHeadersType.REQUEST
+        );
+        
+        let _SESSION = null;
+        _SESSION = new Soup.SessionAsync();
+        Soup.Session.prototype.add_feature.call(
+            _SESSION, 
+            new Soup.ProxyResolverDefault()
+        );
+        _SESSION.queue_message(request, 
+
+        (http_session, message) => {
+            print(message.status_code)
+            print(message) 
+        }
+
+
+        )
+        print(_SESSION)
+        print("NO ERRORS ? ")
+        print("AFTER --------............")
     }
 
     create_menu (){
@@ -73,8 +108,7 @@ class MyPopup extends PanelMenu.Button {
                         style_class: 'search-entry',
                         can_focus: true,
                         hint_text: _('Tranlsated text will show here'),
-                        track_hover: true, 
-                        can_change: false
+                        track_hover: true
         });
 
         fromEntryItem.actor.add(fromSearchEntry, { expand: true });
@@ -91,19 +125,9 @@ class MyPopup extends PanelMenu.Button {
 
 let panelButton, panelButtonText; 
 
+
 function init (){
-
-    panelButton = new St.Bin({
-        style_class : "panel-button"
-    });
-
-    panelButtonText = new St.Label({
-
-        style_class : "examplePanelText", 
-        text : "Hello"
-    });
-
-    panelButton.set_child(panelButtonText);
+    
 
 }
 
