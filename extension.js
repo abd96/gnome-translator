@@ -35,46 +35,49 @@ class GnomeTranslator extends PanelMenu.Button {
         Main.panel.addToStatusArea('gnome-translator', gnomeTranslator, 1);
 
     }
+
     destroy(){
 
         super.destroy();
+        print("Going to Destroy");
     }
+
     open_close(){
         this.menu.connect('open-state-changed', (menu, open) => {
             if (open){
                 // Set default language
                 print('opened');
+                print(Translator.getSupportedLangs())
             }
             else{
-                
-                print("closed")
+                print("closed");
             }
         });
     }
-
+    
     create_menu (){
 
-        //let pmItem = new PopupMenu.PopupMenuItem("First Item ");
-        //this.menu.addMenuItem(pmItem);
-
         // Create sub menu from language 
-        let fromSubItem = new PopupMenu.PopupSubMenuMenuItem('From language');
-        this.menu.addMenuItem(fromSubItem);
+        let sourceLangDropList = new PopupMenu.PopupSubMenuMenuItem('Source Language');
+        this.menu.addMenuItem(sourceLangDropList);
         
+        // fromEntryItem
+        // toEntryItem
 
         // Create text entry for fromSubItem 
-        let fromEntryItem  = new PopupMenu.PopupBaseMenuItem({
+        let SourceTextBox = new PopupMenu.PopupBaseMenuItem({
             reactive: false,
             can_focus: false
             
         }); 
 
-        let toEntryItem  = new PopupMenu.PopupBaseMenuItem({
+        let TargetTextBox = new PopupMenu.PopupBaseMenuItem({
             reactive: false,
             
         }); 
-
-        let fromSearchEntry = new St.Entry({
+        //fromSearchEntry
+        //toSearchEntry
+        let sourceEntry = new St.Entry({
                         name: 'searchEntry',
                         style_class: 'search-entry',
                         can_focus: true,
@@ -82,22 +85,49 @@ class GnomeTranslator extends PanelMenu.Button {
                         track_hover: true
         });
 
-        let toSearchEntry = new St.Entry({
+        let targetEntry = new St.Entry({
                         name: 'searchEntry',
                         style_class: 'search-entry',
-                        can_focus: true,
+                        can_focus: false,
                         hint_text: _('Tranlsated text will show here'),
                         track_hover: true
         });
 
-        fromEntryItem.actor.add(fromSearchEntry, { expand: true });
-        toEntryItem.actor.add(toSearchEntry, { expand: true });
-        this.menu.addMenuItem(fromEntryItem);
+        SourceTextBox.actor.add(sourceEntry, { expand: true });
+        
+        TargetTextBox.actor.add(targetEntry, { expand: true });
+
+        this.menu.addMenuItem(SourceTextBox);
 
         // Create sub menu to language 
-        let toSubItem = new PopupMenu.PopupSubMenuMenuItem('To language');
-        this.menu.addMenuItem(toSubItem); // add the "to" item list 
-        this.menu.addMenuItem(toEntryItem);  // add item for translated text 
+        let targetLangDropList = new PopupMenu.PopupSubMenuMenuItem('Target Language');
+        this.menu.addMenuItem(targetLangDropList); // add the "to" item list 
+
+        this.menu.addMenuItem(TargetTextBox);  // add item for translated text 
+
+        // Translate Button 
+        //let button = new PopupMenu.PopupMenuItem(_('translate'));
+        //let button= new St.Entry({
+        //                name: 'searchEntry',
+        //                style_class: 'search-entry',
+        //                can_focus: false,
+        //                hint_text: _('Tranlsated text will show here'),
+        //                track_hover: true
+        //});
+
+        let translateSection = new PopupMenu.PopupMenuSection();
+        translateSection.actor.add_child(
+
+            new PopupMenu.PopupImageMenuItem('translate', 
+                'search-high-symbolic')
+        );
+
+        this.menu.addMenuItem(translateSection);
+        translateSection.actor.connect('button-press-event', () => {
+
+            print('clicked');
+            
+        });
     } 
 }
 );
@@ -105,6 +135,7 @@ class GnomeTranslator extends PanelMenu.Button {
 
 
 let gnomeTranslator; 
+
 function init (){
     
 
