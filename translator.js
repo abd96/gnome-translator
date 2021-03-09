@@ -21,5 +21,5 @@ function getSupportedLangs(){
     request.set_request('application/json', 2, JSON.stringify({}));
     var session = new Soup.Session();
     session.send_message(request);
-    return request.response_body.data;
+    return JSON.parse(request.response_body.data);
 }
