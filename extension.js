@@ -28,6 +28,8 @@ class GnomeTranslator extends PanelMenu.Button {
         this.add_child(icon);
         this.create_menu(); 
         this.open_close();
+        this.sourceLang = "en";
+        this.targetLang = "de";
     }
 
     enable(){
@@ -116,26 +118,25 @@ class GnomeTranslator extends PanelMenu.Button {
             
             let sec = new PopupMenu.PopupMenuSection();
             let langItem = new PopupMenu.PopupMenuItem(name);
-            sec.actor.add_child(langItem);    
+            sec.actor.add_child(langItem);
             langItem.connect('activate', item => {
-                targetLangDropList.label.set_text(item.label.get_text());
-                print("Clicked");
+                sourceLangDropList.label.set_text(item.label.get_text());
+                this.sourceLang = item.label.get_text();
             });
-            targetLangDropList.menu.addMenuItem(sec);
+            sourceLangDropList.menu.addMenuItem(sec);
+
         });
         Array.prototype.forEach.call(langNames, name => {
             
             let sec = new PopupMenu.PopupMenuSection();
             let langItem = new PopupMenu.PopupMenuItem(name);
-            sec.actor.add_child(langItem);
+            sec.actor.add_child(langItem);    
             langItem.connect('activate', item => {
-                sourceLangDropList.label.set_text(item.label.get_text());
-                print("Clicked");
+                targetLangDropList.label.set_text(item.label.get_text());
+                this.targetLang = item.label.get_text();
             });
-            sourceLangDropList.menu.addMenuItem(sec);
-
+            targetLangDropList.menu.addMenuItem(sec);
         });
-
         // Add Everything to Menu 
         this.menu.addMenuItem(sourceLangDropList);
         SourceTextBox.actor.add(sourceEntry, { expand: true });

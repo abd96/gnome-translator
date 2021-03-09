@@ -1,3 +1,5 @@
+const Extension  = imports.misc.extensionUtils.getCurrentExtension();
+const Translator = Extension.imports.translator;
 
 function namesToView(possibleLangs){
     var names = []; 
@@ -7,6 +9,7 @@ function namesToView(possibleLangs){
     return names;
 }
 
-function addAvailableLangs(subMenuItem, PossibleLangs) {
-        
+function getCodeForName(name) {
+    possibleLangs = Translator.getSupportedLangs();
+    print(possibleLangs)
 } 
