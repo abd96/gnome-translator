@@ -58,7 +58,6 @@ class GnomeTranslator extends PanelMenu.Button {
 
         // Create sub menu from language 
         let sourceLangDropList = new PopupMenu.PopupSubMenuMenuItem('Source Language');
-        this.menu.addMenuItem(sourceLangDropList);
         
         // fromEntryItem
         // toEntryItem
@@ -93,17 +92,10 @@ class GnomeTranslator extends PanelMenu.Button {
                         track_hover: false
         });
 
-        SourceTextBox.actor.add(sourceEntry, { expand: true });
-        
-        TargetTextBox.actor.add(targetEntry, { expand: true });
 
-        this.menu.addMenuItem(SourceTextBox);
 
         // Create sub menu to language 
         let targetLangDropList = new PopupMenu.PopupSubMenuMenuItem('Target Language');
-        this.menu.addMenuItem(targetLangDropList); // add the "to" item list 
-
-        this.menu.addMenuItem(TargetTextBox);  // add item for translated text 
 
         let translateSection = new PopupMenu.PopupMenuSection();
         translateSection.actor.add_child(
@@ -112,7 +104,6 @@ class GnomeTranslator extends PanelMenu.Button {
                 'search-high-symbolic')
         );
 
-        this.menu.addMenuItem(translateSection);
         translateSection.actor.connect('button-press-event', () => {
 
             print('clicked');
@@ -124,19 +115,35 @@ class GnomeTranslator extends PanelMenu.Button {
         Array.prototype.forEach.call(langNames, name => {
             
             let sec = new PopupMenu.PopupMenuSection();
-            sec.actor.add_child(
-                new PopupMenu.PopupMenuItem(name)
-            );    
+            let langItem = new PopupMenu.PopupMenuItem(name);
+            sec.actor.add_child(langItem);    
+            langItem.connect('activate', item => {
+                targetLangDropList.label.set_text(item.label.get_text());
+                print("Clicked");
+            });
             targetLangDropList.menu.addMenuItem(sec);
         });
         Array.prototype.forEach.call(langNames, name => {
             
             let sec = new PopupMenu.PopupMenuSection();
-            sec.actor.add_child(
-                new PopupMenu.PopupMenuItem(name)
-            );    
+            let langItem = new PopupMenu.PopupMenuItem(name);
+            sec.actor.add_child(langItem);
+            langItem.connect('activate', item => {
+                sourceLangDropList.label.set_text(item.label.get_text());
+                print("Clicked");
+            });
             sourceLangDropList.menu.addMenuItem(sec);
+
         });
+
+        // Add Everything to Menu 
+        this.menu.addMenuItem(sourceLangDropList);
+        SourceTextBox.actor.add(sourceEntry, { expand: true });
+        TargetTextBox.actor.add(targetEntry, { expand: true });
+        this.menu.addMenuItem(SourceTextBox);
+        this.menu.addMenuItem(targetLangDropList); 
+        this.menu.addMenuItem(TargetTextBox);  
+        this.menu.addMenuItem(translateSection);
     } 
 }
 );
