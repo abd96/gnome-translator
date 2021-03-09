@@ -28,7 +28,12 @@ class GnomeTranslator extends PanelMenu.Button {
         this.add_child(icon);
         this.create_menu(); 
         this.open_close();
-        Translator.translate('en', 'de', 'Hello')
+    }
+
+    enable(){
+        
+        Main.panel.addToStatusArea('gnome-translator', gnomeTranslator, 1);
+
     }
     destroy(){
 
@@ -109,8 +114,7 @@ function enable (){
     if(!gnomeTranslator){
 
         gnomeTranslator = new GnomeTranslator();
-
-        Main.panel.addToStatusArea('gnome-translator', gnomeTranslator, 1);
+        gnomeTranslator.enable();
 
     }
 }
