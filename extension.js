@@ -41,36 +41,17 @@ class MyPopup extends PanelMenu.Button {
         print("BEOFRE -.................");
         let url = "https://libretranslate.com/translate";
         let request = Soup.Message.new('POST',url);
-        let messageBody = Soup.MessageBody.new();
-        let body    = messageBody.append(
-            JSON.stringify({
-                q: "Hello",
-                source: "en",
-                target: "es"
-            })
-        );
-        let messageHeader = Soup.MessageHeaders.new(
-            Soup.MessageHeadersType.REQUEST
-        );
-        
-        let _SESSION = null;
-        _SESSION = new Soup.SessionAsync();
-        Soup.Session.prototype.add_feature.call(
-            _SESSION, 
-            new Soup.ProxyResolverDefault()
-        );
-        _SESSION.queue_message(request, 
+        var POSTparams = JSON.stringify({
+                "q": "Hello",
+                "source": "en",
+                "target": "es"
+            });
+        request.set_request('application/json', 2, POSTparams);
+        var session = new Soup.Session();
+        print(request.toString())
+        session.send_message(request);
+        print(request.response_body.data)
 
-        (http_session, message) => {
-            print(message.status_code)
-            print(message) 
-        }
-
-
-        )
-        print(_SESSION)
-        print("NO ERRORS ? ")
-        print("AFTER --------............")
     }
 
     create_menu (){
