@@ -8,10 +8,15 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const GLib = imports.gi.GLib; 
 const Soup = imports.gi.Soup
 
+// local 
+const Extension = imports.misc.extensionUtils.getCurrentExtension();
+const Translator = Extension.imports.translator;
+
+
 let myPopup; 
 
-const MyPopup = GObject.registerClass(
-class MyPopup extends PanelMenu.Button {
+const GnomeTranslator = GObject.registerClass(
+class GnomeTranslator extends PanelMenu.Button {
 
     _init(){
         super._init(1);
@@ -23,35 +28,23 @@ class MyPopup extends PanelMenu.Button {
         this.add_child(icon);
         this.create_menu(); 
         this.open_close();
+        Translator.translate('en', 'de', 'Hello')
     }
+    destroy(){
 
+        super.destroy();
+    }
     open_close(){
         this.menu.connect('open-state-changed', (menu, open) => {
             if (open){
                 // Set default language
                 print('opened');
-                this.test_translation()
+            }
+            else{
+                
+                print("closed")
             }
         });
-    }
-
-    test_translation(){
-        
-        
-        print("BEOFRE -.................");
-        let url = "https://libretranslate.com/translate";
-        let request = Soup.Message.new('POST',url);
-        var POSTparams = JSON.stringify({
-                "q": "Hello",
-                "source": "en",
-                "target": "es"
-            });
-        request.set_request('application/json', 2, POSTparams);
-        var session = new Soup.Session();
-        print(request.toString())
-        session.send_message(request);
-        print(request.response_body.data)
-
     }
 
     create_menu (){
@@ -104,20 +97,25 @@ class MyPopup extends PanelMenu.Button {
 }
 );
 
-let panelButton, panelButtonText; 
 
 
+let gnomeTranslator; 
 function init (){
     
 
 }
 
 function enable (){
-    myPopup = new MyPopup();
-    Main.panel.addToStatusArea('mypopup', myPopup, 1);
-    // Main.panel._rightBox.insert_child_at_index(panelButton, 1);
+    if(!gnomeTranslator){
+
+        gnomeTranslator = new GnomeTranslator();
+
+        Main.panel.addToStatusArea('gnome-translator', gnomeTranslator, 1);
+
+    }
 }
 
 function disable (){
-    Main.panel._rightBox.remove_child(panelButton);
+    gnomeTranslator.destroy();
+    gnomeTranslator = null;
 }
