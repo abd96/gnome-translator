@@ -94,8 +94,6 @@ class GnomeTranslator extends PanelMenu.Button {
                         track_hover: false
         });
 
-
-
         // Create sub menu to language 
         let targetLangDropList = new PopupMenu.PopupSubMenuMenuItem('Target Language');
 
@@ -109,7 +107,6 @@ class GnomeTranslator extends PanelMenu.Button {
         translateSection.actor.connect('button-press-event', () => {
 
             print('clicked');
-            
 
         });
 
@@ -121,7 +118,7 @@ class GnomeTranslator extends PanelMenu.Button {
             sec.actor.add_child(langItem);
             langItem.connect('activate', item => {
                 sourceLangDropList.label.set_text(item.label.get_text());
-                this.sourceLang = item.label.get_text();
+                this.sourceLang = Utils.getCodeForName(item.label.get_text());
             });
             sourceLangDropList.menu.addMenuItem(sec);
 
@@ -133,10 +130,12 @@ class GnomeTranslator extends PanelMenu.Button {
             sec.actor.add_child(langItem);    
             langItem.connect('activate', item => {
                 targetLangDropList.label.set_text(item.label.get_text());
-                this.targetLang = item.label.get_text();
+                this.targetLang = Utils.getCodeForName(item.label.get_text());
             });
             targetLangDropList.menu.addMenuItem(sec);
+
         });
+
         // Add Everything to Menu 
         this.menu.addMenuItem(sourceLangDropList);
         SourceTextBox.actor.add(sourceEntry, { expand: true });
