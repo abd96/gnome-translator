@@ -101,7 +101,7 @@ class GnomeTranslator extends PanelMenu.Button {
         //toSearchEntry
         this.sourceEntry = new St.Entry({
                         name: 'searchEntry',
-                        style_class: 'search-entry',
+                        style_class: 'translator-text-box',
                         can_focus: true,
                         hint_text: _('Type here to add text for translation..'),
                         track_hover: true, 
@@ -110,16 +110,18 @@ class GnomeTranslator extends PanelMenu.Button {
         });
 
         let targetEntry = new St.Entry({ name: 'searchEntry',
-                        style_class: 'search-entry',
+                        style_class: 'translator-text-box',
                         can_focus: false,
                         hint_text: _('Tranlsated text will show here'),
                         track_hover: false
         });
-        
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        // print(this.sourceEntry.width);
+        // this.sourceEntry.set_height(200);
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         this.sourceEntry.clutter_text.connect('key-press-event', (o, e) => {
             this._onKeyPressed(o, e);
 		});
-
         // Create sub menu to language 
         let targetLangDropList = new PopupMenu.PopupSubMenuMenuItem('Choose a target language : ');
 
@@ -158,6 +160,27 @@ class GnomeTranslator extends PanelMenu.Button {
 
         });
 
+        
+
+        //let scroll = new St.ScrollView({
+        //    style_class: 'translator-text-box'    
+        //});
+        //let actor = new St.BoxLayout({
+        //    reactive: true,
+        //    x_expand: true,
+        //    y_expand: true,
+        //    x_align: St.Align.END,
+        //    y_align: St.Align.MIDDLE
+        //});
+        //actor.add(scroll, {
+        //    x_fill: true,
+        //    y_fill: true,
+        //    expand: true
+        //});
+        //let entry = new St.Entry({
+        //    style_class: 'translator-entry'
+        //});
+
         // Add Everything to Menu 
         this.menu.addMenuItem(sourceLangDropList);
         SourceTextBox.actor.add(this.sourceEntry, { expand: true });
@@ -166,6 +189,7 @@ class GnomeTranslator extends PanelMenu.Button {
         this.menu.addMenuItem(targetLangDropList); 
         this.menu.addMenuItem(TargetTextBox);  
         this.menu.addMenuItem(translateSection);
+        
     } 
 }
 );
