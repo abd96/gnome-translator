@@ -12,7 +12,7 @@ const Clutter    = imports.gi.Clutter;
 const Extension  = imports.misc.extensionUtils.getCurrentExtension();
 const Translator = Extension.imports.translator;
 const Utils      = Extension.imports.utils;
-
+const Pango      = imports.gi.Pango;
 let myPopup; 
 
 const GnomeTranslator = GObject.registerClass(
@@ -106,7 +106,9 @@ class GnomeTranslator extends PanelMenu.Button {
                         hint_text: _('Type here to add text for translation..'),
                         track_hover: true, 
                         x_expand: true,
-                        y_expand: true
+                        y_expand: true,
+                        reactive: true,
+                        track_hover: false
         });
 
         let targetEntry = new St.Entry({ name: 'searchEntry',
@@ -117,14 +119,15 @@ class GnomeTranslator extends PanelMenu.Button {
         });
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         // print(this.sourceEntry.width);
-        // this.sourceEntry.set_height(200);
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        this.sourceEntry.set_height(80);
+        let _source_clutter_text = this.sourceEntry.get_clutter_text();
+        let _target_clutter_text = targetEntry.get_clutter_text();
+        _source_clutter_text.set_single_line_mode(false);
         this.sourceEntry.clutter_text.connect('key-press-event', (o, e) => {
             this._onKeyPressed(o, e);
 		});
         // Create sub menu to language 
         let targetLangDropList = new PopupMenu.PopupSubMenuMenuItem('Choose a target language : ');
-
         let translateSection = new PopupMenu.PopupMenuSection();
         let TImageItem = new PopupMenu.PopupImageMenuItem('translate', 
                 'search-high-symbolic')
@@ -133,6 +136,11 @@ class GnomeTranslator extends PanelMenu.Button {
         TImageItem.actor.connect('button-press-event', () => {
             this._translate();
         });
+
+        targetLangDropList.set_track_hover(false);
+        sourceLangDropList.set_track_hover(false);
+        TImageItem.set_track_hover(false);
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
         let langNames = Utils.namesToView(Translator.getSupportedLangs());
         Array.prototype.forEach.call(langNames, name => {
