@@ -119,10 +119,12 @@ class GnomeTranslator extends PanelMenu.Button {
         });
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         // print(this.sourceEntry.width);
-        this.sourceEntry.set_height(80);
         let _source_clutter_text = this.sourceEntry.get_clutter_text();
         let _target_clutter_text = targetEntry.get_clutter_text();
+
         _source_clutter_text.set_single_line_mode(false);
+        _target_clutter_text.set_single_line_mode(false);
+
         this.sourceEntry.clutter_text.connect('key-press-event', (o, e) => {
             this._onKeyPressed(o, e);
 		});
