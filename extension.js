@@ -25,14 +25,14 @@ class GnomeTranslator extends PanelMenu.Button {
             gicon : Gio.icon_new_for_string( Me.dir.get_path() + '/logo.png'),
             style_class : 'system-status-icon'
         });
+        this.sourceEntry = null;
         this.add_child(icon);
         this.create_menu(); 
         this.open_close();
 
         this.sourceLang  = "en";
-        this.sourceText  = "";
         this.targetLang  = "de";
-        this.tartgetText = "";
+        this._sourceText = "";
     }
 
     enable(){
@@ -40,11 +40,10 @@ class GnomeTranslator extends PanelMenu.Button {
         Main.panel.addToStatusArea('gnome-translator', gnomeTranslator, 1);
 
     }
-
+    
     destroy(){
 
         super.destroy();
-        print("Going to Destroy");
     }
 
     open_close(){
@@ -58,9 +57,7 @@ class GnomeTranslator extends PanelMenu.Button {
             }
         });
     }
-    _onSearchTextChanged(){
 
-    } 
     _onKeyPressed(o, e){
         let symbol = e.get_key_symbol();
         if (symbol == Clutter.Return     || 
@@ -68,13 +65,17 @@ class GnomeTranslator extends PanelMenu.Button {
             symbol == Clutter.KP_Enter   ){
             // get and translate text 
             print("Enter Key detected");
+            this._translate();
         }
-        else if (symbol == KEY_Escape){
-            
+        else if (symbol == Clutter.KEY_Escape){
+            this.menu.close();
+        }
+        else{
+            this.sourceText = o.get_text();    
         }
     }
     _translate(){
-        
+        print("From : " + this.sourceEntry.get_text());
     }
     create_menu (){
 
@@ -98,7 +99,7 @@ class GnomeTranslator extends PanelMenu.Button {
         
         //fromSearchEntry
         //toSearchEntry
-        let sourceEntry = new St.Entry({
+        this.sourceEntry = new St.Entry({
                         name: 'searchEntry',
                         style_class: 'search-entry',
                         can_focus: true,
@@ -115,32 +116,20 @@ class GnomeTranslator extends PanelMenu.Button {
                         track_hover: false
         });
         
-        targetEntry.clutter_text.connect('key-press-event', (o, e) => {
-            print("O ->"+ o);
-            print("e->" + e);
+        this.sourceEntry.clutter_text.connect('key-press-event', (o, e) => {
             this._onKeyPressed(o, e);
 		});
-
-        targetEntry.get_clutter_text().connect(
-			'text-changed',
-			this._onSearchTextChanged.bind()
-		);
-
 
         // Create sub menu to language 
         let targetLangDropList = new PopupMenu.PopupSubMenuMenuItem('Choose a target language : ');
 
         let translateSection = new PopupMenu.PopupMenuSection();
-        translateSection.actor.add_child(
-
-            new PopupMenu.PopupImageMenuItem('translate', 
+        let TImageItem = new PopupMenu.PopupImageMenuItem('translate', 
                 'search-high-symbolic')
-        );
+        translateSection.actor.add_child(TImageItem);
 
-        translateSection.actor.connect('button-press-event', () => {
-
-            print('clicked');
-
+        TImageItem.actor.connect('button-press-event', () => {
+            this._translate();
         });
 
         let langNames = Utils.namesToView(Translator.getSupportedLangs());
@@ -171,7 +160,7 @@ class GnomeTranslator extends PanelMenu.Button {
 
         // Add Everything to Menu 
         this.menu.addMenuItem(sourceLangDropList);
-        SourceTextBox.actor.add(sourceEntry, { expand: true });
+        SourceTextBox.actor.add(this.sourceEntry, { expand: true });
         TargetTextBox.actor.add(targetEntry, { expand: true });
         this.menu.addMenuItem(SourceTextBox);
         this.menu.addMenuItem(targetLangDropList); 
