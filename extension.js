@@ -7,7 +7,7 @@ const PopupMenu  = imports.ui.popupMenu;
 const Me         = imports.misc.extensionUtils.getCurrentExtension();
 const GLib       = imports.gi.GLib; 
 const Soup       = imports.gi.Soup
-
+const Clutter    = imports.gi.Clutter;
 // local 
 const Extension  = imports.misc.extensionUtils.getCurrentExtension();
 const Translator = Extension.imports.translator;
@@ -28,8 +28,11 @@ class GnomeTranslator extends PanelMenu.Button {
         this.add_child(icon);
         this.create_menu(); 
         this.open_close();
-        this.sourceLang = "en";
-        this.targetLang = "de";
+
+        this.sourceLang  = "en";
+        this.sourceText  = "";
+        this.targetLang  = "de";
+        this.tartgetText = "";
     }
 
     enable(){
@@ -55,11 +58,28 @@ class GnomeTranslator extends PanelMenu.Button {
             }
         });
     }
-    
+    _onSearchTextChanged(){
+
+    } 
+    _onKeyPressed(o, e){
+        let symbol = e.get_key_symbol();
+        if (symbol == Clutter.Return     || 
+            symbol == Clutter.KEY_Return ||
+            symbol == Clutter.KP_Enter   ){
+            // get and translate text 
+            print("Enter Key detected");
+        }
+        else if (symbol == KEY_Escape){
+            
+        }
+    }
+    _translate(){
+        
+    }
     create_menu (){
 
         // Create sub menu from language 
-        let sourceLangDropList = new PopupMenu.PopupSubMenuMenuItem('Source Language');
+        let sourceLangDropList = new PopupMenu.PopupSubMenuMenuItem('Choose a source language : ');
         
         // fromEntryItem
         // toEntryItem
@@ -75,6 +95,7 @@ class GnomeTranslator extends PanelMenu.Button {
             reactive: false,
             
         }); 
+        
         //fromSearchEntry
         //toSearchEntry
         let sourceEntry = new St.Entry({
@@ -82,20 +103,32 @@ class GnomeTranslator extends PanelMenu.Button {
                         style_class: 'search-entry',
                         can_focus: true,
                         hint_text: _('Type here to add text for translation..'),
-                        track_hover: true,
-                        hover: false
+                        track_hover: true, 
+                        x_expand: true,
+                        y_expand: true
         });
 
-        let targetEntry = new St.Entry({
-                        name: 'searchEntry',
+        let targetEntry = new St.Entry({ name: 'searchEntry',
                         style_class: 'search-entry',
                         can_focus: false,
                         hint_text: _('Tranlsated text will show here'),
                         track_hover: false
         });
+        
+        targetEntry.clutter_text.connect('key-press-event', (o, e) => {
+            print("O ->"+ o);
+            print("e->" + e);
+            this._onKeyPressed(o, e);
+		});
+
+        targetEntry.get_clutter_text().connect(
+			'text-changed',
+			this._onSearchTextChanged.bind()
+		);
+
 
         // Create sub menu to language 
-        let targetLangDropList = new PopupMenu.PopupSubMenuMenuItem('Target Language');
+        let targetLangDropList = new PopupMenu.PopupSubMenuMenuItem('Choose a target language : ');
 
         let translateSection = new PopupMenu.PopupMenuSection();
         translateSection.actor.add_child(
@@ -117,7 +150,7 @@ class GnomeTranslator extends PanelMenu.Button {
             let langItem = new PopupMenu.PopupMenuItem(name);
             sec.actor.add_child(langItem);
             langItem.connect('activate', item => {
-                sourceLangDropList.label.set_text(item.label.get_text());
+                sourceLangDropList.label.set_text("Source Language : " + item.label.get_text());
                 this.sourceLang = Utils.getCodeForName(item.label.get_text());
             });
             sourceLangDropList.menu.addMenuItem(sec);
@@ -129,7 +162,7 @@ class GnomeTranslator extends PanelMenu.Button {
             let langItem = new PopupMenu.PopupMenuItem(name);
             sec.actor.add_child(langItem);    
             langItem.connect('activate', item => {
-                targetLangDropList.label.set_text(item.label.get_text());
+                targetLangDropList.label.set_text("Target Language : " + item.label.get_text());
                 this.targetLang = Utils.getCodeForName(item.label.get_text());
             });
             targetLangDropList.menu.addMenuItem(sec);
