@@ -6,13 +6,11 @@ const PanelMenu  = imports.ui.panelMenu;
 const PopupMenu  = imports.ui.popupMenu;
 const Me         = imports.misc.extensionUtils.getCurrentExtension();
 const GLib       = imports.gi.GLib; 
-const Soup       = imports.gi.Soup
 const Clutter    = imports.gi.Clutter;
 // local 
 const Extension  = imports.misc.extensionUtils.getCurrentExtension();
 const Translator = Extension.imports.translator;
 const Utils      = Extension.imports.utils;
-const Pango      = imports.gi.Pango;
 let myPopup; 
 
 const GnomeTranslator = GObject.registerClass(
