@@ -11,9 +11,8 @@ function namesToView(possibleLangs){
 
 function getCodeForName(name) {
     possibleLangs = Translator.getSupportedLangs();
-    code = "";
+    let code = "";
     Array.prototype.forEach.call(possibleLangs, lang => {
-        
         let ob = JSON.stringify(lang);
         if (JSON.parse(ob).name == name){
             code = JSON.parse(ob).code;
