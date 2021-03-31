@@ -18,7 +18,7 @@ class GnomeTranslator extends PanelMenu.Button {
         super._init(1);
         let icon = new St.Icon({
             // icon_name : 'security-low-symbolic',
-            gicon : Gio.icon_new_for_string( Me.dir.get_path() + '/logo.png'),
+            gicon : Gio.icon_new_for_string( Me.dir.get_path() + '/translate.svg'),
             style_class : 'system-status-icon'
         });
         this.sourceLang  = "en";
