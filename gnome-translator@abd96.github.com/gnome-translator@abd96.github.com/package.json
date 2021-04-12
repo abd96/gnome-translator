@@ -1,0 +1,18 @@
+{
+  "name": "blah",
+  "version": "0.0.1",
+  "description": "blah",
+  "scripts": {
+    "watch": "nodemon --exec 'npm run build'",
+    "build": "webpack"
+  },
+  "author": "me",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "webpack": "^2.7.0"
+  },
+  "dependencies": {
+    "string-format": "^0.5.0"
+  }
+}

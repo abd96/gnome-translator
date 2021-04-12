@@ -1,1 +1,0 @@
-../gnome-translator@abd96.github.com
