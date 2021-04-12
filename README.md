@@ -1,4 +1,8 @@
-# gnome-translator
+# Gnome-translator
+A translator for the gnome shell. Gnome-translator uses [LibreTranslate](https://github.com/uav4geo/LibreTranslate) to translate text. 
 
-### TODO
-* React on clicked Languages. And close current Menu.
+![GnomeTranslator GIF](gif/gnomeTranslator.gif)
+
+List of supported languages : 
+* English, Arabic, Chinese, French, German, Hindi, Irish, Italian, Japansese, Korean, Portuguese, Russian, Spanish.
+
